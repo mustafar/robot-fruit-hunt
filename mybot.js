@@ -10,7 +10,13 @@ var ThatFruityAndroid = {
    },
    Weights : {
       THEIR_FRUIT_COUNT_BIAS : 0.2,
-      FRUIT_WEIGHT_TAKE_THRESHOLD : 5
+      FRUIT_WEIGHT_TAKE_THRESHOLD : 5,
+      STOP_FOLLOW_THRESHOLD : 3
+   },
+   Them : {
+      lastPosX : null,
+      lastPosY : null,
+      numMovesFollowed : 0
    },
 
 
@@ -48,6 +54,7 @@ var ThatFruityAndroid = {
    board : null,
    fruitWeights : null,
    milestone : null,
+   milestoneSecondary : null,
    path : null,
 
 
@@ -84,6 +91,9 @@ var ThatFruityAndroid = {
       var milestone = new Object();
       milestone.x = myX;
       milestone.y = myY;
+      var milestoneSecondary = new Object();
+      milestoneSecondary.x = myX;
+      milestoneSecondary.y = myY;
       var maxDist = this.board.length + this.board[0].length;
       var maxScore = 0;
       for (var i=0; i<this.board.length; i++) {
@@ -101,16 +111,19 @@ var ThatFruityAndroid = {
             var score = fruitWeight / (dist*100/maxDist);
             if (score > maxScore) {
                maxScore = score;
+               milestoneSecondary.x = milestone.x;
+               milestoneSecondary.y = milestone.y;
                milestone.x = i;
                milestone.y = j;
             }
          }
       }
-      return milestone;
+      this.milestone = milestone;
+      this.milestoneSecondary = milestoneSecondary;
    },
 
-   setSprint : function(myX, myY) {
-      var milestone = this.setMilestone(myX, myY);
+   setSprint : function(myX, myY, sprintTo) {
+      var milestone = sprintTo;
       var path = this.chartPath(myX, myY, milestone.x, milestone.y);
       if (this.path) {
          this.path.length = 0;
@@ -231,8 +244,6 @@ var ThatFruityAndroid = {
       var board = this.getBoard();
       var myX = this.getMyX();
       var myY = this.getMyY();
-      var theirX = this.getTheirX();
-      var theirY = this.getTheirY();
 
       // set weights for individual fruit types.
       this.setFruitWeights();
@@ -242,8 +253,15 @@ var ThatFruityAndroid = {
             this.path === null ||
             this.path.length === 0 ||
             (this.milestone 
-               && board[this.milestone.x][this.milestone.y])) {
-         this.setSprint(myX, myY);
+               && board[this.milestone.x][this.milestone.y]) ||
+            this.Them.numMovesFollowed >= this.Weights.STOP_FOLLOW_THRESHOLD
+         ) {
+         this.setMilestone(myX, myY);
+         if (this.Them.numMovesFollowed < this.Weights.STOP_FOLLOW_THRESHOLD) {
+            this.setSprint(myX, myY, this.milestone);
+         } else {
+            this.setSprint(myX, myY, this.milestoneSecondary);
+         }
       }
 
       // make decision to TAKE
@@ -263,6 +281,29 @@ var ThatFruityAndroid = {
          }
       }
 
+      // check if we are following opponent
+      var goingToX = myX;
+      var goingToY = myY;
+      if (move === this.Moves.EAST) {
+         goingToX += 1;
+      } else if (move === this.Moves.WEST) {
+         goingToX -= 1;
+      } else if (move === this.Moves.NORTH) {
+         goingToY -= 1;
+      } else if (move === this.Moves.SOUTH) {
+         goingToY += 1;
+      }
+      if (goingToX === this.Them.lastPosX &&
+            goingToY===this.Them.lastPosY) {
+         this.Them.numMovesFollowed += 1;
+      } else {
+         this.Them.numMovesFollowed = 0;
+      }
+
+      // remember their last move
+      this.Them.lastPosX = this.getTheirX();
+      this.Them.lastPosY = this.getTheirY();
+
       //console.log("Move "+move);
       return move;
    }
@@ -275,4 +316,3 @@ function new_game() {
 function make_move() {
    return ThatFruityAndroid.makeMove();
 }
-
