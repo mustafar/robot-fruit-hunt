@@ -1,8 +1,8 @@
-Welcome!
 
-Modify mybot.js to start writing your bot. Opening game.html will allow you to generate random boards, and either watch your bot play or step through one move at a time. Refer to http://www.scribd.com/jobs/botrace_api for available methods. gl/hf!
+From Scribd.
 
-Scribd.
+Opening game.html will allow you to generate random boards, and either watch your bot play or step through one move at a time. 
+Refer to http://www.scribd.com/jobs/botrace_api for available methods. gl/hf!
 
 ps: you should be able to ignore everything in assets/, but if you want to disable the opponent bot from playing in game.html, go to assets/simplebot.js and find:
     makeMove: function() {
@@ -10,3 +10,9 @@ ps: you should be able to ignore everything in assets/, but if you want to disab
        // return PASS;
 
 Uncomment the "return PASS;" and your bot will be free to roam the board alone.
+
+-----------------------------------
+
+ThatFruityAndroid
+
+v1 - Find best fruit to go after, sprint towards it, taking in fruits from as many non-closed fruit groups as possible.
