@@ -74,8 +74,8 @@ var ThatFruityAndroid = {
          if (needTheirs<=0 || needMine<=0) {
             weight = 0;
          } else {
-            var myWeight = 100/needMine;
-            var theirWeight = 100/needTheirs;
+            var myWeight = 100/(needMine*remainingCount);
+            var theirWeight = 100/(needTheirs*remainingCount);
             weight = myWeight 
                    - (this.Weights.THEIR_FRUIT_COUNT_BIAS * theirWeight);
             if (weight < 0) {
