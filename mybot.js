@@ -266,8 +266,10 @@ var ThatFruityAndroid = {
 
       // make decision to TAKE
       if (board[myX][myY] > 0) {
-         if (this.fruitWeights[board[myX][myY]]
-               > this.Weights.FRUIT_WEIGHT_TAKE_THRESHOLD) {
+         if ((this.fruitWeights[board[myX][myY]]
+               > this.Weights.FRUIT_WEIGHT_TAKE_THRESHOLD) ||
+               (board[myX][myY] === board[this.milestone.x][this.milestone.y]) ||
+               (board[myX][myY] === board[this.milestoneSecondary.x][this.milestoneSecondary.y])) {
             return this.Moves.TAKE;
          }
       }
