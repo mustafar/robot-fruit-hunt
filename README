@@ -18,3 +18,5 @@ v1 - Find best fruit to go after, sprint towards it, taking in fruits from as ma
 
 v2 - Added check to see if you are just following the opponent. If my position is the same as opponent's last position
 for 3 consecutive moves, sprint towards second best item instead of the best.
+
+v3 - Improved weights (factored in remaining count into weight calc.)
