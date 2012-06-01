@@ -254,6 +254,9 @@ var ThatFruityAndroid = {
             this.path.length === 0 ||
             (this.milestone 
                && board[this.milestone.x][this.milestone.y]) ||
+            (this.milestone 
+               && this.milestone.x === this.getTheirX()
+               && this.milestone.y === this.getTheirY()) ||
             this.Them.numMovesFollowed >= this.Weights.STOP_FOLLOW_THRESHOLD
          ) {
          this.setMilestone(myX, myY);
